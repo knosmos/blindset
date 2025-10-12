@@ -1,103 +1,51 @@
-import Image from "next/image";
+'use client';
+
+import Board from './components/board';
+import React from 'react';
+import Card from './components/card';
+import { useState } from 'react';
 
 export default function Home() {
+  const [score, setScore] = useState(0);
+  const [history, setHistory] = useState<{ number: number; color: string; shading: string; shape: string }[][] | null>(null);
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-purple-200 flex flex-col items-center justify-start">
+      <div className="lg:grid lg:grid-cols-[4fr_1fr] lg:gap-8 w-full items-start justify-center">
+        <div className="text-center w-full">
+        <h1 className="text-4xl font-bold text-purple-800 my-8 font-sans tracking-tight">blindset
+        <span className='border bg-purple-100 rounded-md border-purple-300 ml-5 px-3'>👀 ×{score}</span></h1>
+        <Board setScore={setScore} setHistory={setHistory} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        <div className='p-4 h-full'>
+          <div className='p-4 bg-purple-100 rounded-lg border border-purple-300 shadow-md shadow-purple-300 w-full h-full'>
+            <h2 className='text-2xl font-semibold text-purple-800 mb-4 font-sans tracking-tight'>history</h2>
+            {history ? (
+              history.map((set, index) => (
+                <div key={index} className='mb-4 last:mb-0'>
+                  <div className='grid grid-cols-3 gap-2'>
+                    {set.map((card, cardIndex) => (
+                <div
+                    className={`shadow-purple-300 shadow-md rounded p-2 bg-white flex justify-center flex-wrap`}
+                    key={cardIndex}
+                >
+                    {[...Array(card.number)].map((_, i) => (
+                        <img key={i} src={`/cards/${card.shape}${card.color}${card.shading}.png`}
+                         className="w-1/4 block px-0.5"/>
+                    ))}
+                </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className='text-purple-600'>No sets found yet. Are you blind??</p>
+            )}
+          </div>
+        </div>
+      </div>
+      <footer className="w-full text-center p-4 text-purple-700">
+        <p className="text-sm">Made with 💜 and hate by <a href="https://jieruei.github.io" className="underline">knosmos</a></p>
       </footer>
-    </div>
+    </main>
   );
 }
