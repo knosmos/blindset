@@ -24,6 +24,20 @@ function checkSet(cards: { number: number; color: string; shading: string; shape
     return true;
 }
 
+function existsSet(cards: { number: number; color: string; shading: string; shape: string }[]) {
+    const n = cards.length;
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            for (let k = j + 1; k < n; k++) {
+                if (checkSet([cards[i], cards[j], cards[k]])) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 type SetCard = { number: number; color: string; shading: string; shape: string };
 
 export default function Board({
@@ -72,7 +86,7 @@ export default function Board({
         setFlipped(prev => {
             if (isProcessing) return prev;
             const exists = prev.includes(index);
-            return exists ? prev.filter(i => i !== index) : [...prev, index];
+            return exists ? prev : [...prev, index];
         });
     }
 
@@ -97,6 +111,9 @@ export default function Board({
                     });
                     setFlipped([]);
                     setIsProcessing(false);
+                    if (!existsSet(cardsState.filter((_, idx) => !flipped.includes(idx)))) {
+                        alert("tbh i didn't expect anyone to finish this game so there aren't any fun win conditions. congrats ....");
+                    }
                 }, 300);
                 confetti({
                     particleCount: 100,
@@ -108,7 +125,7 @@ export default function Board({
                 timeoutId = setTimeout(() => {
                     setFlipped([]);
                     setIsProcessing(false);
-                }, 2000);
+                }, 1500);
             }
         } else {
             timeoutId = setTimeout(() => setFlipped([]), 500);

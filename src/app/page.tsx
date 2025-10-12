@@ -2,18 +2,53 @@
 
 import Board from './components/board';
 import React from 'react';
+import { useEffect } from 'react';
 import Card from './components/card';
 import { useState } from 'react';
 
 export default function Home() {
   const [score, setScore] = useState(0);
   const [history, setHistory] = useState<{ number: number; color: string; shading: string; shape: string }[][] | null>(null);
+  const [timer, setTimer] = useState(0);
+
+  // timer
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (timer > 0) {
+      intervalId = setInterval(() => {
+        setTimer((t) => t + 1);
+      }, 1000);
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [timer]);
+
+  // start stopwatch
+  useEffect(() => {
+    setTimer(1);
+  }, []);
+
+  function formatTime(seconds: number) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return ` ⏱ ${mins}:${secs.toString().padStart(2, '0')}`;
+  }
   return (
     <main className="min-h-screen bg-purple-200 flex flex-col items-center justify-start">
       <div className="lg:grid lg:grid-cols-[4fr_1fr] lg:gap-8 w-full items-start justify-center">
-        <div className="text-center w-full">
-        <h1 className="text-4xl font-bold text-purple-800 my-8 font-sans tracking-tight">blindset
-        <span className='border bg-purple-100 rounded-md border-purple-300 ml-5 px-3'>👀 ×{score}</span></h1>
+        <div className="w-full">
+          <div className="text-center md:flex md:flex-row md:items-center md:justify-between flex-wrap px-4">
+            <h1 className="text-4xl font-bold text-purple-800 my-8 font-sans tracking-tight">
+              blindset
+              <span className='border bg-purple-100 rounded-md border-purple-300 ml-5 px-3'>
+                👀 ×{score}
+              </span>
+            </h1>
+            <div className="text-purple-800 font-mono text-sm md:text-xl mt-2 md:mt-0">
+            {formatTime(timer)}
+            </div>
+          </div>
         <Board setScore={setScore} setHistory={setHistory} />
         </div>
         <div className='p-4 h-full'>

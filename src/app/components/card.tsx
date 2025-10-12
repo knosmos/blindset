@@ -44,9 +44,13 @@ export default function Card(
                     ))}
                 </div>
                 <div
-                    className="absolute inset-0 border border-purple-300 backface-hidden rotate-y-180  shadow-md rounded-xl bg-white p-2 flex items-center justify-center"
+                    className="absolute inset-0 border border-purple-300 backface-hidden rotate-y-180  shadow-md rounded-xl bg-purple-200 p-2 flex items-center justify-center"
+                    style={{
+                        backgroundImage: "linear-gradient(135deg, white 25%, transparent 25%), linear-gradient(225deg, white 25%, transparent 25%), linear-gradient(45deg, white 25%, transparent 25%), linear-gradient(315deg, white 25%, #f6edfa 25%)",
+                        backgroundSize: "20px 20px",
+                    }}
                 >
-                    <span className="text-md text-purple-300 font-sans border-2 border-purple-300 rounded-md p-3 tracking-widest">BLINDSET</span>
+                    <span className="text-md text-purple-400 font-sans border-1 border-black-400 rounded-md p-1 sm:p-3 tracking-widest">BLINDSET</span>
                 </div>
             </div>
         );
