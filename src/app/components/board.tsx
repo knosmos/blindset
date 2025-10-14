@@ -78,7 +78,7 @@ export default function Board({
 
     // Shuffle cards on initial render
     useEffect(() => {
-        let shuffled = [...cardsState];
+        const shuffled = [...cardsState];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -165,7 +165,7 @@ export default function Board({
             <div className="font-sans fixed inset-0 bg-[rgba(0,0,0,0.1)] flex items-center justify-center">
                 <div className="bg-purple-100 p-6 rounded-lg shadow-lg border border-purple-400 text-purple-800">
                     <h2 className="text-2xl font-bold mb-4">nice job! ... was it worth it?</h2>
-                    <p className="mb-4">tbh i didn't expect anyone to make it this far. congrats ~</p>
+                    <p className="mb-4">tbh i didn&apos;t expect anyone to make it this far. congrats ~</p>
                     <button
                         className="bg-purple-800 text-white px-4 py-2 rounded-md hover:bg-purple-600 w-full cursor-pointer"
                         onClick={() => window.location.reload()}
