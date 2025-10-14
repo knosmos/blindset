@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const [score, setScore] = useState(0);
+  const [attempts, setAttempts] = useState(0);
   const [history, setHistory] = useState<{ number: number; color: string; shading: string; shape: string }[][] | null>(null);
   const [timer, setTimer] = useState(0);
 
@@ -32,7 +33,8 @@ export default function Home() {
   function formatTime(seconds: number) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return ` ⏱ ${mins}:${secs.toString().padStart(2, '0')}`;
+    const spinner = ["◐","◓","◑","◒"][seconds % 4];
+    return `${spinner} ${mins}:${secs.toString().padStart(2, '0')}`;
   }
   return (
     <main className="min-h-screen bg-purple-200 flex flex-col items-center justify-start">
@@ -46,10 +48,10 @@ export default function Home() {
               </span>
             </h1>
             <div className="text-purple-800 font-mono text-sm md:text-xl mt-2 md:mt-0">
-            {formatTime(timer)}
+            {formatTime(timer)} | {attempts} attempts
             </div>
           </div>
-        <Board setScore={setScore} setHistory={setHistory} />
+        <Board setScore={setScore} setHistory={setHistory} setAttempts={setAttempts} />
         </div>
         <div className='p-4 h-full'>
           <div className='p-4 bg-purple-100 rounded-lg border border-purple-300 shadow-md shadow-purple-300 w-full h-full'>
@@ -73,12 +75,12 @@ export default function Home() {
                 </div>
               ))
             ) : (
-              <p className='text-purple-600'>No sets found yet. Are you blind??</p>
+              <p className='text-purple-600 font-sans'>No sets found yet. Are you blind?</p>
             )}
           </div>
         </div>
       </div>
-      <footer className="w-full text-center p-4 text-purple-700">
+      <footer className="w-full text-center p-4 text-purple-700 font-sans">
         <p className="text-sm">Made with 💜 and hate by <a href="https://jieruei.github.io" className="underline">knosmos</a></p>
       </footer>
     </main>

@@ -30,6 +30,7 @@ function existsSet(cards: { number: number; color: string; shading: string; shap
         for (let j = i + 1; j < n; j++) {
             for (let k = j + 1; k < n; k++) {
                 if (checkSet([cards[i], cards[j], cards[k]])) {
+                    console.log('Found set:', cards[i], cards[j], cards[k]);
                     return true;
                 }
             }
@@ -43,9 +44,11 @@ type SetCard = { number: number; color: string; shading: string; shape: string }
 export default function Board({
     setScore,
     setHistory,
+    setAttempts,
 }: {
     setScore?: React.Dispatch<React.SetStateAction<number>>;
     setHistory?: React.Dispatch<React.SetStateAction<SetCard[][] | null>>;
+    setAttempts?: React.Dispatch<React.SetStateAction<number>>;
 }) {
     const numbers = [1, 2, 3];
     const colors = ['r', 'g', 'p'];
@@ -71,13 +74,17 @@ export default function Board({
     // mutex
     const [isProcessing, setIsProcessing] = useState(false);
 
+    const [endGame, setEndGame] = useState(false);
+
     // Shuffle cards on initial render
     useEffect(() => {
-        const shuffled = [...cardsState];
+        let shuffled = [...cardsState];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
+        // TEMP remove cards
+        // shuffled = shuffled.slice(0, 12);
         setCards(shuffled);
     }, []);
 
@@ -98,7 +105,8 @@ export default function Board({
         let timeoutId: ReturnType<typeof setTimeout> | null = null;
         setIsProcessing(true);
 
-        if (setScore && setHistory) {
+        if (setScore && setHistory && setAttempts) {
+            setAttempts((prev) => prev + 1);
             if (checkSet(selectedCards)) {
                 timeoutId = setTimeout(() => {
                     setScore((prevScore: number) => prevScore + 1);
@@ -111,8 +119,8 @@ export default function Board({
                     });
                     setFlipped([]);
                     setIsProcessing(false);
-                    if (!existsSet(cardsState.filter((_, idx) => !flipped.includes(idx)))) {
-                        alert("tbh i didn't expect anyone to finish this game so there aren't any fun win conditions. congrats ....");
+                    if (!existsSet(cardsState.filter((_, i) => visible[i] && !flipped.includes(i)))) {
+                        setEndGame(true);
                     }
                 }, 300);
                 confetti({
@@ -138,6 +146,7 @@ export default function Board({
     }, [flipped]);
 
     return (
+        <div>
         <div className="grid gap-3 p-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 w-full">
             {cardsState.map((card, index) => (
                 <Card
@@ -151,6 +160,21 @@ export default function Board({
                     isVisible={visible[index]}
                 />
             ))}
+        </div>
+        {endGame &&
+            <div className="font-sans fixed inset-0 bg-[rgba(0,0,0,0.1)] flex items-center justify-center">
+                <div className="bg-purple-100 p-6 rounded-lg shadow-lg border border-purple-400 text-purple-800">
+                    <h2 className="text-2xl font-bold mb-4">nice job! ... was it worth it?</h2>
+                    <p className="mb-4">tbh i didn't expect anyone to make it this far. congrats ~</p>
+                    <button
+                        className="bg-purple-800 text-white px-4 py-2 rounded-md hover:bg-purple-600 w-full cursor-pointer"
+                        onClick={() => window.location.reload()}
+                    >
+                        play again
+                    </button>
+                </div>
+            </div>
+        }
         </div>
     );
 }

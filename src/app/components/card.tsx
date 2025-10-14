@@ -30,6 +30,17 @@ export default function Card(
             setRotation(Math.floor(Math.random() * 11) - 5);
         }, [setRotation]);
 
+        const DEVMODE = false;
+        let faceClass, backClass;
+        if (!DEVMODE) {
+            faceClass = "shadow-purple-300 shadow-md border-purple-300 backface-hidden border rounded-xl p-2 bg-white flex justify-center flex-wrap";
+            backClass = `absolute inset-0 border border-purple-300 backface-hidden rotate-y-180 shadow-md rounded-xl bg-purple-200 p-2 flex items-center justify-center ${isVisible ? '' : 'invisible'}`;
+        }
+        else {
+            faceClass = "shadow-purple-300 shadow-md border-purple-300 border rounded-xl p-2 bg-white flex justify-center flex-wrap";
+            backClass = `absolute inset-0 border border-purple-300 backface-hidden rotate-y-180 shadow-md rounded-xl bg-purple-200 opacity-50 p-2 flex items-center justify-center ${isVisible ? '' : 'invisible'}`;
+        }
+
         return (
             <div
                 onClick={onToggle}
@@ -37,14 +48,14 @@ export default function Card(
                 style={{ transform: `rotate(${rotation}deg) rotateY(${isFaceUp ? "0deg" : "180deg"}` }}
             >
                 <div
-                    className={`shadow-purple-300 shadow-md border-purple-300 backface-hidden border rounded-xl p-2 bg-white flex justify-center flex-wrap`}
+                    className={faceClass}
                 >
                     {[...Array(number)].map((_, i) => (
                         <img key={i} src={shapeFile} className="w-1/4 block p-1"/>
                     ))}
                 </div>
                 <div
-                    className="absolute inset-0 border border-purple-300 backface-hidden rotate-y-180  shadow-md rounded-xl bg-purple-200 p-2 flex items-center justify-center"
+                    className={backClass}
                     style={{
                         backgroundImage: "linear-gradient(135deg, white 25%, transparent 25%), linear-gradient(225deg, white 25%, transparent 25%), linear-gradient(45deg, white 25%, transparent 25%), linear-gradient(315deg, white 25%, #f6edfa 25%)",
                         backgroundSize: "20px 20px",
